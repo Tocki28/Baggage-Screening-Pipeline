@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -g
+CXXFLAGS := -std=c++17 -Wall -Wextra -g -Iinclude
 
 BUILD_DIR := build
 TARGET := $(BUILD_DIR)/Baggage-Screening-Pipeline

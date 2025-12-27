@@ -1,0 +1,1 @@
+This directory contains code that supports the entire system, but is not domain-specific to image processing.
