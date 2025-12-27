@@ -1,18 +1,28 @@
-CXX = g++
-CXXFLAGS = -Wall -Werror -Wextra -pedantic -std=c++17 -g -fsanitize=address
-LDFLAGS =  -fsanitize=address
+CXX := g++
+CXXFLAGS := -std=c++17 -Wall -Wextra -g
 
-EXT = .cpp
-SRCDIR = src
+BUILD_DIR := build
+TARGET := $(BUILD_DIR)/Baggage-Screening-Pipeline
 
-SRC = $(wildcard $(SRCDIR)/*$(EXT))
-OBJ = $(SRC:.cc=.o)
-EXEC = Baggage-Screening-Pipeline
+SRCS := $(shell find src -name '*.cpp')
+OBJS := $(patsubst src/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
+DEPS := $(OBJS:.o=.d)
 
-all: $(EXEC)
+all: $(TARGET)
 
-$(EXEC): $(OBJ)
-	$(CXX) $(LDFLAGS) -o $@ $(OBJ) $(LBLIBS)
+$(TARGET): $(OBJS)
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
+$(BUILD_DIR)/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
 clean:
-	rm -rf $(OBJ) $(EXEC)
+	rm -rf $(BUILD_DIR)
+
+-include $(DEPS)
+
+print:
+	@echo "SRCS = $(SRCS)"
+	@echo "OBJS = $(OBJS)"
